@@ -45,7 +45,7 @@ def predict_promotion(id, farm_area, temp_obs, wind_direction, dew_temp, pressur
 
 #st.title("Robust Yield Prediction for Farm Processing Units")
 html_temp = """ <div style="background-color:#8F75AD;padding:10px">
-    <h2 style="color:white;text-align:center;">Robust Yield Prediction for Farm Processing Units
+    <h2 style="color:white;text-align:center;">Robust Yield Prediction
  </h2>
 
     </div>

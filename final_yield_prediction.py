@@ -16,22 +16,6 @@ train_data = pd.read_csv('/Users/aishwaryapirankar/Desktop/Bootcamp Projects/Yie
 train_weather = pd.read_csv('/Users/aishwaryapirankar/Desktop/Bootcamp Projects/Yield Prediction/Data/train_weather-1646897968670.csv', nrows=300)
 farm_data = pd.read_csv('/Users/aishwaryapirankar/Desktop/Bootcamp Projects/Yield Prediction/Data/farm_data-1646897931981.csv', nrows=300)
 
-train_data.dtypes
-
-train_data.nunique()
-
-train_data.head()
-
-train_data.tail()
-
-farm_data.head()
-
-farm_data.dtypes
-
-train_weather.head()
-
-train_weather.dtypes
-
 # sns.set_style("whitegrid")
 # sns.set_context("poster")
 
@@ -100,23 +84,9 @@ train_weather.deidentified_location.value_counts()
 #Drop deidentified_location column from the merged dataset
 train_data_merged.drop('deidentified_location', axis=1, inplace=True)
 
-train_data_merged.shape
-
-train_weather.shape
-
-train_data_merged.isnull().sum()
-
-train_data_merged.nunique()
-
 train_data_merged.ingredient_type.value_counts(normalize = True)*100
 
 train_data_merged.farming_company.value_counts(normalize = True)*100
-
-train_weather.nunique()
-
-train_weather.head()
-
-train_weather.dtypes
 
 #Drop 'timestamp' from weather data
 train_weather.drop('timestamp', axis=1, inplace=True)
@@ -128,27 +98,13 @@ train_data_merged.shape
 #Final Merged Dataset 
 train_final_merged = pd.merge(train_data_merged,train_weather,left_index = True, right_index = True)
 
-train_final_merged.nunique()
-
 train_final_merged.ingredient_type.value_counts(normalize = True)*100
 
 train_final_merged.farming_company.value_counts(normalize = True)*100
 
 train_final_merged.deidentified_location.value_counts(normalize = True)*100
 
-train_final_merged.shape
-
-train_final_merged.isnull().sum()
-
-train_final_merged.head()
-
-train_final_merged.tail()
-
 train_final_merged.drop('farm_id', axis=1, inplace=True)
-
-train_final_merged.head()
-
-train_final_merged.tail()
 
 #Calculating Hour difference between the timestamps
 train_final_merged['Hours'] = train_final_merged['timestamp'].dt.hour
@@ -164,14 +120,8 @@ train_final_merged['timestamp'].min(), train_final_merged['timestamp'].max(), (t
 #Converting Timestamp to integer
 train_final_merged['Unix Sec'] = pd.to_datetime(train_final_merged['timestamp']).astype(int)/ 10**9
 
-train_final_merged.head()
-
-train_final_merged.dtypes
-
 #Type Conversion float to int
 train_final_merged['Unix Sec'] = train_final_merged['Unix Sec'].astype('int64')
-
-train_final_merged.dtypes
 
 train_final_merged.drop('timestamp', axis=1, inplace=True)
 
@@ -208,33 +158,13 @@ train_final_merged.ingredient_type = le.fit_transform(train_final_merged.ingredi
 
 train_final_merged['ingredient_type'] = train_final_merged['ingredient_type'].astype('category')
 
-train_final_merged.dtypes
-
-train_final_merged.nunique()
-
-train_final_merged.farming_company.value_counts()
-
-train_final_merged.head()
-
-train_final_merged.deidentified_location.value_counts()
-
-train_final_merged.ingredient_type.value_counts()
-
-train_final_merged.nunique()
-
 #Descriptive Stats of Final Dataset
 train_final_merged.describe()
 
 #Check for null values in the merged dataset
 train_final_merged.isnull().sum()
 
-train_final_merged.dtypes
-
 train_final_merged.drop('Hours', axis=1, inplace=True)
-
-train_final_merged.num_processing_plants.value_counts()
-
-train_final_merged.head()
 
 #Seperated the numeric columns from the final merged dataset
 num_col = ['yield','farm_area','temp_obs', 'wind_direction', 'dew_temp', 'pressure_sea_level', 
@@ -262,28 +192,12 @@ num_imputer = SimpleImputer(strategy = 'median')
 imputed_data = pd.DataFrame(num_imputer.fit_transform(train_final_merged[num_col]),
                                columns = num_col)
 
-imputed_data.dtypes
-
-imputed_data.head()
-
-imputed_data.tail()
-
 #Type Conversions
 col = ['temp_obs','dew_temp','wind_speed','wind_direction','Unix Sec','farm_area']
 
 imputed_data[col] = imputed_data[col].astype('int64')
 
-imputed_data.head()
-
-imputed_data.tail()
-
-imputed_data.dtypes
-
-imputed_data.shape
-
 imputed_data.insert(0, 'id', imputed_data.index)
-
-imputed_data.head()
 
 cat_col = ['ingredient_type','farming_company', 'deidentified_location']
 
@@ -291,10 +205,6 @@ Final_data = pd.merge(imputed_data,
                          train_final_merged[cat_col],
                          left_index=True,
                          right_index=True)
-
-Final_data.head()
-
-Final_data.dtypes
 
 """# Model Building and Predictions
 
@@ -457,12 +367,6 @@ Reading the Test Data Files
 test_data = pd.read_csv('/Users/aishwaryapirankar/Desktop/Bootcamp Projects/Yield Prediction/Data/test_data-1664552867678.csv', nrows=50)
 test_weather = pd.read_csv('/Users/aishwaryapirankar/Desktop/Bootcamp Projects/Yield Prediction/Data/test_weather-1646897984996-1664552604982.csv', nrows=50)
 
-test_data.head()
-
-test_weather.head()
-
-test_data.shape
-
 """* Performed all the Data Cleaning practices on the Test datasets as well """
 
 test_data['date'] = pd.to_datetime(test_data['date'], format='%Y-%m-%d %H:%M:%S')
@@ -493,37 +397,15 @@ test_weather.drop('deidentified_location', axis=1, inplace=True)
 
 #test_data.head()
 
-test_data_merged.shape
-
-test_weather.head()
-
-test_data_merged.tail()
-
-test_data_merged.head()
-
 #test_data_merged.nunique()
 
 #test_weather.nunique()
 
 test_weather.insert(0, 'id', test_weather.index)
 
-test_weather.head()
-
-test_data_merged.head()
-
-test_data_merged.tail()
-
 #test_weather.drop('deidentified_location', axis=1, inplace=True)
 
-test_data_merged.shape
-
-test_weather.shape
-
 test_final_merge = pd.merge(test_data_merged,test_weather,on = 'id',how = 'left')
-
-test_final_merge.shape
-
-test_final_merge.head()
 
 test_final_merge.drop('farm_id', axis=1, inplace=True)
 
@@ -557,15 +439,7 @@ test_final_merge['ingredient_type'] = test_final_merge['ingredient_type'].astype
 
 test_final_merge.drop('Hours', axis=1, inplace=True)
 
-test_final_merge.tail()
-
 Test_Data = test_final_merge
-
-Test_Data.head()
-
-Test_Data.nunique()
-
-Test_Data.tail()
 
 num_col = ['id','farm_area','temp_obs', 'wind_direction', 'dew_temp', 'pressure_sea_level', 
        'precipitation', 'wind_speed','Unix Sec']
